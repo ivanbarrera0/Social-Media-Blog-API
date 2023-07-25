@@ -35,7 +35,9 @@ public class MessageDAO {
         
     }
 
-    public List<Message> retrieveAllMessagesFromId() {
+    // May change the parameter of int 
+
+    public List<Message> retrieveAllMessagesFromId(int id) {
 
         Connection connection = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();
@@ -44,6 +46,7 @@ public class MessageDAO {
 
             String sql = "SELECT * FROM message WHERE account_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
 
             while(rs.next()) {
@@ -76,7 +79,7 @@ public class MessageDAO {
         }
     }
 
-    public Message retrieveMessageById() {
+    public Message retrieveMessageById(int id) {
 
         Connection connection = ConnectionUtil.getConnection();
 
@@ -84,6 +87,7 @@ public class MessageDAO {
 
             String sql = "SELECT * FROM message WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,id);
             ResultSet rs = preparedStatement.executeQuery();
 
             while(rs.next()) {
@@ -101,7 +105,7 @@ public class MessageDAO {
 
     // Return type can be changed
 
-    public void deleteMessageById() {
+    public void deleteMessageById(int id) {
 
         Connection connection = ConnectionUtil.getConnection();
 
@@ -109,6 +113,7 @@ public class MessageDAO {
 
             String sql = "DELETE FROM message WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,id);
             ResultSet rs = preparedStatement.executeQuery();
 
         } catch(SQLException e) {
