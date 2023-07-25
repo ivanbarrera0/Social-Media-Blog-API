@@ -20,20 +20,22 @@ public class MessageService {
         return messageDAO.retrieveAllMessages();
     }
 
-    public List<Message> getAllMessagesById(int id) {
-        return messageDAO.retrieveAllMessagesFromId(id);
+    // Get all the messages by user id
+    public List<Message> getAllMessagesByMessageId(int id) {
+        return messageDAO.retrieveAllMessagesFromMessageId(id);
     }
 
+    // Get message by message id
     public Message getMessageByItsId(int id) {
         return messageDAO.retrieveMessageById(id);
     }
 
     public Message updateMessage(Message message, int id) {
-        return messageDAO.updateMessageById(message, id);
+        return messageDAO.retrieveMessageById(id);
     }
 
-    public void deleteMessageById(int id) {
-        messageDAO.deleteMessageById(id);
+    public Message deleteMessageById(int id) {
+        return messageDAO.deleteMessageById(id);
     }
 
     public Message createNewMessage(Message message) {
