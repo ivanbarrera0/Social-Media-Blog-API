@@ -61,7 +61,7 @@ public class MessageDAO {
         return messages;
     }
 
-    public void updateMessageById(Message message, int id) {
+    public Message updateMessageById(String message_text, int id) {
 
         Connection connection = ConnectionUtil.getConnection();
 
@@ -70,13 +70,28 @@ public class MessageDAO {
             String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             
-            preparedStatement.setString(1, message.getMessage_text());
+            preparedStatement.setString(1, message_text);
             preparedStatement.setInt(2, id);
             
             preparedStatement.executeUpdate();
+
+            sql = "SELECT * FROM message WHERE message_id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()) {
+                Message updatedMessage = new Message(rs.getInt("account_id"), rs.getInt("posted_by"),
+                rs.getString("message_text"), rs.getLong("time_posted_epoch"));
+
+                return updatedMessage;
+            }
+
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        return null;
     }
 
     public Message retrieveMessageById(int id) {
@@ -135,14 +150,15 @@ public class MessageDAO {
 
         try {
 
-            String sql = "INSERT INTO message(posted_by, message_text, time_posted_epoch);";
+            String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES(?, ?, ?);";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, message.getPosted_by());
             preparedStatement.setString(2, message.getMessage_text());
             preparedStatement.setLong(3, message.getTime_posted_epoch());
 
-            preparedStatement.executeQuery();
+            // Remember to use .executeUpdate() for DML statements
+            preparedStatement.executeUpdate();
 
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if(pkeyResultSet.next()) {

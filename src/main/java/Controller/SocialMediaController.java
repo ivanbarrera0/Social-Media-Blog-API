@@ -48,11 +48,14 @@ public class SocialMediaController {
     
     // 1
     // Registers user
+    // I left off here 
+    // get the username and password
     private void registerUserHandler(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(context.body(), Account.class);
         Account addAccount = accountService.registerAccount(account);
-        if(addAccount == null) {
+
+        if(addAccount.getUsername().isEmpty() || addAccount.getPassword().length() < 4 || addAccount == null) {
             context.status(400);
         } else {
             context.json(mapper.writeValueAsString(addAccount));
@@ -65,10 +68,10 @@ public class SocialMediaController {
     private void loginUserHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
-        //Account account = mapper.readValue(context.body(), Account.class);
-        Account loginAccount = accountService.registerAccount(account);
+        Account account = mapper.readValue(context.body(), Account.class);
+        Account loginAccount = accountService.loginAccount(account.getUsername(), account.getPassword());
         if(loginAccount == null) {
-            context.status(400);
+            context.status(401);
         } else {
             context.json(mapper.writeValueAsString(loginAccount));
         }
@@ -124,9 +127,10 @@ public class SocialMediaController {
     private void updateMessageHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(context.body(), Message.class);
+        //Message message = mapper.readValue(context.body(), Message.class);
+        String message_text = mapper.readValue(context.body(), String.class);
         int message_id = Integer.parseInt(context.pathParam("message_id"));
-        Message updatedMessage = messageService.updateMessage(message, message_id);
+        Message updatedMessage = messageService.updateMessage(message_text, message_id);
         if(updatedMessage == null) {
             context.status(400);
         } else {

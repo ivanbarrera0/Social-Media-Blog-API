@@ -30,8 +30,8 @@ public class MessageService {
         return messageDAO.retrieveMessageById(id);
     }
 
-    public Message updateMessage(Message message, int id) {
-        return messageDAO.retrieveMessageById(id);
+    public Message updateMessage(String message_text, int id) {
+        return messageDAO.updateMessageById(message_text, id);
     }
 
     public Message deleteMessageById(int id) {
@@ -39,6 +39,9 @@ public class MessageService {
     }
 
     public Message createNewMessage(Message message) {
+        if(message.message_text.isEmpty() || message.message_text.length() > 254) {
+            return null;
+        }
         return messageDAO.createMessage(message);
     }
 }
