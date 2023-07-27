@@ -64,7 +64,7 @@ public class SocialMediaController {
 
     // 2 
     // Verify the user
-    // Will finish later
+    // WORKS
     private void loginUserHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -78,6 +78,7 @@ public class SocialMediaController {
     }
 
     // 3
+    // WORKS
     private void createMessageHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -96,14 +97,15 @@ public class SocialMediaController {
     }
 
     // 5 
+    // WORKS
     private void retrieveMessageByItsIdHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(context.body(), Message.class);
         int message_id = Integer.parseInt(context.pathParam("message_id"));
         Message targetMessage = messageService.getMessageByItsId(message_id);
+        
         if(targetMessage == null) {
-            context.status(400);
+            context.status(200);
         } else {
             context.json(mapper.writeValueAsString(targetMessage));
         }
@@ -141,10 +143,10 @@ public class SocialMediaController {
     // 8
     private void retrieveAllMessagesFromUserIdHandler(Context context) throws JsonProcessingException {
 
-        //ObjectMapper mapper = new ObjectMapper();
-        //Message message = mapper.readValue(context.body(), Message.class);
-        int account_id = Integer.parseInt(context.pathParam("account_id"));
-        context.json(messageService.getAllMessagesByMessageId(account_id));
+        ObjectMapper mapper = new ObjectMapper();
+        int account_id = Integer.parseInt(context.pathParam("accounts_id"));
+
+        context.json(mapper.writeValueAsString(messageService.getAllMessagesByMessageId(account_id)));
     }
 
     /**
