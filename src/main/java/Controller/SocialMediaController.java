@@ -32,25 +32,27 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        //app.get("example-endpoint", this::exampleHandler);
-        app.post("/register", this::registerUserHandler);
+        app.post("/register", this::registerNewUserHandler);
         app.post("/login", this::loginUserHandler);
         app.post("/messages", this::createMessageHandler);
         app.get("/messages", this::retrieveAllMessagesHandler);
-        app.get("/messages/{message_id}", this::retrieveMessageByItsIdHandler); 
-        app.delete("/messages/{message_id}", this::deleteMessageHandler); 
-        app.patch("/messages/{message_id}", this::updateMessageHandler); 
-        app.get("accounts/{accounts_id}/messages", this::retrieveAllMessagesFromUserIdHandler); 
-        //app.start(8080);
+        app.get("/messages/{message_id}", this::retrieveMessageByMessageIdHandler); 
+        app.delete("/messages/{message_id}", this::deleteMessageByMessageIdHandler); 
+        app.patch("/messages/{message_id}", this::updateMessageByMessageIdHandler); 
+        app.get("accounts/{accounts_id}/messages", this::retrieveAllMessagesByUserIdHandler); 
 
         return app;
     }
-    
-    // 1
-    // Registers user
-    // I left off here 
-    // get the username and password
-    private void registerUserHandler(Context context) throws JsonProcessingException {
+
+    /**
+     * This method is used to create a new user 
+     * and add their generated id, username and password
+     * to the database.
+     * 
+     * @param context
+     * @throws JsonProcessingException
+     */
+    private void registerNewUserHandler(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(context.body(), Account.class);
         Account addAccount = accountService.registerAccount(account);
@@ -62,9 +64,14 @@ public class SocialMediaController {
         }
     }
 
-    // 2 
-    // Verify the user
-    // WORKS
+    /**
+     * This method takes request body and creates an account object.
+     * Then create another account that will be checked to see if it exists
+     * based on its username and password
+     * 
+     * @param context
+     * @throws JsonProcessingException
+     */
     private void loginUserHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -77,8 +84,12 @@ public class SocialMediaController {
         }
     }
 
-    // 3
-    // WORKS
+    /**
+     * This method creates a message object and inserts it into the database.
+     * 
+     * @param context
+     * @throws JsonProcessingException
+     */
     private void createMessageHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -91,15 +102,24 @@ public class SocialMediaController {
         }
     }
 
-    // 4 retrieve all messages
-    // WORKS
+    /**
+     * This method retrieves all the messages in the database 
+     * into a list that is then turned to JSON representation of the list
+     * 
+     * @param context
+     */
     private void retrieveAllMessagesHandler(Context context) {
         context.json(messageService.getAllMessages());
     }
 
-    // 5 
-    // WORKS
-    private void retrieveMessageByItsIdHandler(Context context) throws JsonProcessingException {
+    /**
+     * This method retrieves a message based on its message_id.
+     * The id is taken from the endpoint.
+     * 
+     * @param context
+     * @throws JsonProcessingException
+     */
+    private void retrieveMessageByMessageIdHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
         int message_id = Integer.parseInt(context.pathParam("message_id"));
@@ -112,8 +132,14 @@ public class SocialMediaController {
         }
     }
 
-    // 6
-    private void deleteMessageHandler(Context context) throws JsonProcessingException {
+    /**
+     * This method deletes a message based on its message_id.
+     * The id is taken from the endpoint.
+     * 
+     * @param context
+     * @throws JsonProcessingException
+     */
+    private void deleteMessageByMessageIdHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
         int message_id = Integer.parseInt(context.pathParam("message_id"));
@@ -125,9 +151,15 @@ public class SocialMediaController {
         }
     }
 
-    // 7 
-    // WORKS
-    private void updateMessageHandler(Context context) throws JsonProcessingException {
+    /**
+     * This method updates the message_text of a message based on
+     * its message_id. The id is taken from the endpoint and the
+     * message_text is taken from the response body.
+     * 
+     * @param context
+     * @throws JsonProcessingException
+     */
+    private void updateMessageByMessageIdHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
         Message message = context.bodyAsClass(Message.class);
@@ -140,9 +172,14 @@ public class SocialMediaController {
         }
     }
 
-    // 8
-    // WORKS
-    private void retrieveAllMessagesFromUserIdHandler(Context context) throws JsonProcessingException {
+    /**
+     * This method retrieves all messages from a user based 
+     * on the user's id. The id is taken from the endpoint.
+     * 
+     * @param context
+     * @throws JsonProcessingException
+     */
+    private void retrieveAllMessagesByUserIdHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
         int account_id = Integer.parseInt(context.pathParam("accounts_id"));

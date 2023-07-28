@@ -13,8 +13,6 @@ import Util.ConnectionUtil;
 
 public class AccountDAO {
 
-    // Add the condition if the account already exists or the password is too short
-
     public Account registerAccount(Account account) {
 
         Connection connection = ConnectionUtil.getConnection();
