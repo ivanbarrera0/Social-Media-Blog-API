@@ -55,7 +55,7 @@ public class SocialMediaController {
         Account account = mapper.readValue(context.body(), Account.class);
         Account addAccount = accountService.registerAccount(account);
 
-        if(addAccount.getUsername().isEmpty() || addAccount.getPassword().length() < 4 || addAccount == null) {
+        if(addAccount == null) {
             context.status(400);
         } else {
             context.json(mapper.writeValueAsString(addAccount));
