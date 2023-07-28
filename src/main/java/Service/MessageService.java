@@ -30,8 +30,13 @@ public class MessageService {
         return messageDAO.retrieveMessageById(id);
     }
 
-    public Message updateMessage(String message_text, int id) {
-        return messageDAO.updateMessageById(message_text, id);
+    public Message updateMessage(Message message, int id) {
+
+        if(message.getMessage_text().isEmpty() || message.getMessage_text().length() > 254) {
+            return null;
+        }
+
+        return messageDAO.updateMessageById(message.getMessage_text(), id);
     }
 
     public Message deleteMessageById(int id) {

@@ -20,17 +20,10 @@ public class AccountService {
     // Registers a new account to the database
     public Account registerAccount(Account account) {
 
-        //if(accountDAO.checkAccountExists(account.getUsername()) != null) {
-        //    return null;
-        //}
-
-        if(accountDAO.countAccountsByUsername(account.getUsername()) != 0) {
-            return null;
-        }
-
         return accountDAO.registerAccount(account);
     }
 
+    // Logins in account checks if it exists
     public Account loginAccount(String username, String password) {
 
         return accountDAO.loginAccount(username, password);

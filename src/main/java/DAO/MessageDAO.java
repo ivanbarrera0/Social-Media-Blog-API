@@ -75,15 +75,10 @@ public class MessageDAO {
             
             preparedStatement.executeUpdate();
 
-            
 
-            ResultSet rs = preparedStatement.executeQuery();
-            while(rs.next()) {
-                Message updatedMessage = new Message(rs.getInt("account_id"), rs.getInt("posted_by"),
-                rs.getString("message_text"), rs.getLong("time_posted_epoch"));
+            Message updatedMessage  = retrieveMessageById(id);
 
-                return updatedMessage;
-            }
+            return updatedMessage;
 
         } catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -122,16 +117,17 @@ public class MessageDAO {
     public Message deleteMessageById(int id) {
 
         Connection connection = ConnectionUtil.getConnection();
-        //Message returnedMessage = null;
+        Message returnedMessage = retrieveMessageById(id);
 
         try {
 
             String sql = "DELETE FROM message WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,id);
-            preparedStatement.executeUpdate(sql);
 
             preparedStatement.executeUpdate();
+
+            return returnedMessage;
 
         } catch(SQLException e) {
             System.out.println(e.getMessage());

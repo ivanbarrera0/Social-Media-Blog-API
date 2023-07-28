@@ -92,6 +92,7 @@ public class SocialMediaController {
     }
 
     // 4 retrieve all messages
+    // WORKS
     private void retrieveAllMessagesHandler(Context context) {
         context.json(messageService.getAllMessages());
     }
@@ -115,24 +116,23 @@ public class SocialMediaController {
     private void deleteMessageHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
-        //Message message = mapper.readValue(context.body(), Message.class);
         int message_id = Integer.parseInt(context.pathParam("message_id"));
         Message deletedMessage = messageService.deleteMessageById(message_id);
         if(deletedMessage == null) {
-            context.status(400);
+            context.status(200);
         } else {
             context.json(mapper.writeValueAsString(deletedMessage));
         }
     }
 
-    // 7 (Need to change)
+    // 7 
+    // WORKS
     private void updateMessageHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
-        //Message message = mapper.readValue(context.body(), Message.class);
-        String message_text = mapper.readValue(context.body(), String.class);
+        Message message = context.bodyAsClass(Message.class);
         int message_id = Integer.parseInt(context.pathParam("message_id"));
-        Message updatedMessage = messageService.updateMessage(message_text, message_id);
+        Message updatedMessage = messageService.updateMessage(message, message_id);
         if(updatedMessage == null) {
             context.status(400);
         } else {
@@ -141,6 +141,7 @@ public class SocialMediaController {
     }
 
     // 8
+    // WORKS
     private void retrieveAllMessagesFromUserIdHandler(Context context) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -148,14 +149,5 @@ public class SocialMediaController {
 
         context.json(mapper.writeValueAsString(messageService.getAllMessagesByMessageId(account_id)));
     }
-
-    /**
-     * This is an example handler for an example endpoint.
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-    private void exampleHandler(Context context) {
-        context.json("sample text");
-    }
-
 
 }

@@ -21,6 +21,12 @@ public class AccountDAO {
 
         try {
 
+            Account duplicate = checkAccountExists(account.getUsername());
+
+            if(duplicate != null) {
+                return null;
+            }
+
             String sql = "INSERT INTO account(username, password) VALUES (?, ?);";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
