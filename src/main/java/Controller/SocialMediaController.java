@@ -184,7 +184,7 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         int account_id = Integer.parseInt(context.pathParam("accounts_id"));
 
-        context.json(mapper.writeValueAsString(messageService.getAllMessagesByMessageId(account_id)));
+        context.json(mapper.writeValueAsString(messageService.getAllMessagesByUserId(account_id)));
     }
 
 }

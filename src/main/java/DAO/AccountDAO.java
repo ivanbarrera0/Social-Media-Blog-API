@@ -13,6 +13,13 @@ import Util.ConnectionUtil;
 
 public class AccountDAO {
 
+    /**
+     * This method executes a SQL query to insert an account into the database 
+     * then returns the inserted account.
+     * 
+     * @param account
+     * @return new account
+     */
     public Account registerAccount(Account account) {
 
         Connection connection = ConnectionUtil.getConnection();
@@ -38,6 +45,16 @@ public class AccountDAO {
         return null;
     }
 
+    /**
+     * This method checks if an account exists if its 
+     * username exists and its corresponding password is also 
+     * present in the account. If so the method returns
+     * the method with its account_id included.
+     * 
+     * @param username
+     * @param password
+     * @return message(with account_id)
+     */
     public Account loginAccount(String username, String password) {
 
         Connection connection = ConnectionUtil.getConnection();
@@ -65,30 +82,16 @@ public class AccountDAO {
         return null;
     }
 
-    public Account checkAccountExists(String username) {
-        Connection connection = ConnectionUtil.getConnection();
 
-        try {
-            String sql = "SELECT * FROM account WHERE username = ?;";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setString(1, username);
-            ResultSet rs = preparedStatement.executeQuery();
-            
-            while(rs.next()) {
-                Account account = new Account(rs.getInt("account_id"), 
-                    rs.getString("username"),
-                    rs.getString("password"));
-                
-                    return account;
-            }
-
-        } catch(SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
-
+    /**
+     * This method returns the number of accounts that have the 
+     * username provided. It is used to check if an account already
+     * exists because no accounts should have the same username
+     * because it has a unique constraint.
+     * 
+     * @param username
+     * @return count of the same usernames
+     */
     public int countAccountsByUsername(String username) {
         Connection connection = ConnectionUtil.getConnection();
     
